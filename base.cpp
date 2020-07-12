@@ -139,6 +139,8 @@ void seatingplan::setticket(){
             int p;
             std::cout<<"Please set the price for zone "<<i.first<<" : ";
             std::cin>>p;
+            while(p < 0)
+                std::cout<<"Invalid input, try again.\n";
             i.second = p;
         }
 }
