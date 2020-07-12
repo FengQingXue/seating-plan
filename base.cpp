@@ -115,7 +115,7 @@ void seatingplan::setzone(){//為可用的區域分配ID
         std::cout<<"Please input the number of zones in the venue: ";
         std::cin>>cnt;
         if(cnt<=0 || cnt>16){
-            std::cout<<"invalid input\n";
+            std::cout<<"Invalid input.\n";
             return;;
         }
         for(int i = 0;i < cnt;i++){
