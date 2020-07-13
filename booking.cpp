@@ -129,3 +129,31 @@ void seatingplan::confirm(std::vector<std::vector<char>> &from,std::vector<std::
     if(choice=='Y' || choice=='y')
         to = from;
 }
+
+bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<std::vector<char>> &seats){//逐个逐个区域地自动订座
+    bool succ = 0;
+    std::vector<std::pair<int,int>> tmpseats;
+    for(int i = 0;i < 16;i++){
+        if(zone[i]==id && succ==0){//找到对应区域
+            tmpseats.clear();
+            for(int j = 0;j < 16;j++){
+                if(tmpseats.size()<no && seats[i][j]==id){//寻找连续且可用的座位
+                    tmpseats.push_back({i,j});
+                }else if(tmpseats.size() == no){
+                    succ = 1;
+                    break;
+                }else{
+                    tmpseats.clear();
+                }
+            }
+        }
+    }
+
+    if(succ){//只有在有足够的连续空位下才会将订座纪录记录
+        for(auto i : tmpseats){
+            seats[i.first][i.second] = 'x';
+        }
+    }
+
+    return succ;
+}

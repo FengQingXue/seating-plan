@@ -32,6 +32,7 @@ public:
     bool valid(std::string in);
     void autobook();
     void confirm(std::vector<std::vector<char>> &from,std::vector<std::vector<char>> &to);
+    bool book_adj(char id,int no,std::vector<char> &zone,std::vector<std::vector<char>> &seats);
 };
 
 #endif //SEATING_PLAN_SP_H
