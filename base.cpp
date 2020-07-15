@@ -36,6 +36,7 @@ void seatingplan::menu(){
 void seatingplan::setdefault(){//重置為默認座位表
     prices.clear();
     seats.clear();
+    zone = {'-','A','A','A','B','B','B','C','C','C'};
 
     prices['A'] = 100;
     prices['B'] = 200;
@@ -45,14 +46,16 @@ void seatingplan::setdefault(){//重置為默認座位表
     seats.push_back(temp);
     for(auto c = 'A';c <= 'C';c++){
         std::vector<char> tmp(16,c);
-        for(int i = 0;i < 5;i++)
+        for(int i = 0;i < 5;i++){
             seats.push_back(tmp);
+        }
     }
 }
 
 void seatingplan::reset(){//清空座位表
     prices.clear();
     seats.clear();
+    zone = (std::vector<char>)(16,' ');
 
     std::vector<char> tmp(16,'-');
     for(int i = 0;i < 16;i++)
@@ -126,9 +129,11 @@ void seatingplan::setzone(){//為可用的區域分配ID
             std::cout<<"to... ";std::cin>>e;
 
             prices[name] = -1;//在門票價錢表中加入當前區域的記錄
-            for(int i = s-1;i < e;i++)//在座位表中記錄區域的範圍
+            for(int i = s-1;i < e;i++){//在座位表中記錄區域的範圍
                 for(char &c : seats[i])
                     c = name;
+                zone[i] = name;
+            }
         }
     }
 }

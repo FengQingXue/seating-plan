@@ -83,7 +83,11 @@ bool seatingplan::valid(std::string in){
 
 void seatingplan::autobook(){//由電腦根據每個區域所需的門票數量訂座，位置隨緣
     std::vector<std::vector<char>> order = seats;
-    std::unordered_map<char,int> bookrec;
+    std::unordered_map<char,int> bookrec;//儲存每個區域想要的座位數量
+    char wantadjs;
+    std::cout<<"Do you want adjacent seats only (Y/N)?:";
+    std::cin>>wantadjs;
+
     for(auto i : prices){//record numbers of seats want in each zone
         std::cout<<"Number of tickets for zone "<<i.first<<": ";
         std::cin>>bookrec[i.first];
@@ -92,22 +96,32 @@ void seatingplan::autobook(){//由電腦根據每個區域所需的門票數量�
         return;//zero seats need to be booked
 
     std::unordered_map<char,std::vector<std::pair<int,char>>> bookedseats;
-    std::unordered_map<char,int> copy = bookrec;
-     for(int i = 1;i < 16;i++){
-         for (int j = 0; j < 16; ++j) {
-             if(copy[seats[i][j]]>0){
-                 bookedseats[seats[i][j]].push_back({i,j+'A'});
-                 order[i][j] = 'X';
-                 copy[seats[i][j]]--;
-             }
-         }
-     }
+    if(wantadjs=='n' || wantadjs=='N'){
+
+        std::unordered_map<char,int> copy = bookrec;
+        for(int i = 1;i < 16;i++){
+            for (int j = 0; j < 16; ++j) {
+                if(copy[seats[i][j]]>0){
+                    bookedseats[seats[i][j]].push_back({i,j+'A'});
+                    order[i][j] = 'X';
+                    copy[seats[i][j]]--;
+                }
+            }
+        }
+    }else{
+        for(auto i : bookrec){
+            std::vector<std::pair<int,int>> tmpseats;
+            book_adj(i.first,i.second,zone,order,tmpseats);
+            for(auto j : tmpseats)
+                bookedseats[i.first].push_back(j);
+        }
+    }
 
     for(auto i : bookedseats){//show booked seats
         std::cout<<"Tickets for zone "<<i.first<<" :";
         for(auto j : i.second)
             std::cout<<" "<<j.first<<j.second;
-    	std::cout<<"\n";
+        std::cout<<"\n";
     }
 
     show(order);
@@ -130,15 +144,16 @@ void seatingplan::confirm(std::vector<std::vector<char>> &from,std::vector<std::
         to = from;
 }
 
-bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<std::vector<char>> &seats){//逐个逐个区域地自动订座
+bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<std::vector<char>> &seats,std::vector<std::pair<int,int>> &ret){//逐个逐个区域地自动订座
     bool succ = 0;
     std::vector<std::pair<int,int>> tmpseats;
     for(int i = 0;i < 16;i++){
         if(zone[i]==id && succ==0){//找到对应区域
             tmpseats.clear();
-            for(int j = 0;j < 16;j++){
+            for(int j = 0;j < 16;j++){//todo 目前不能连续订16个座位
+                //std::cout<<i<<" "<<j<<std::endl;
                 if(tmpseats.size()<no && seats[i][j]==id){//寻找连续且可用的座位
-                    tmpseats.push_back({i,j});
+                    tmpseats.emplace_back(i,j);
                 }else if(tmpseats.size() == no){
                     succ = 1;
                     break;
@@ -152,7 +167,9 @@ bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<st
     if(succ){//只有在有足够的连续空位下才会将订座纪录记录
         for(auto i : tmpseats){
             seats[i.first][i.second] = 'x';
+            std::cout<<i.first<<" "<<i.second<<std::endl;
         }
+        ret = tmpseats;
     }
 
     return succ;

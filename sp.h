@@ -14,6 +14,7 @@ public:
 
     std::vector<std::vector<char>> seats;//座位表（未被訂座的顯示區域ID，否則顯示X）
     std::unordered_map<char,int> prices;//門票撿錢
+    std::vector<char> zone;
 
     seatingplan() {reset();}//每當新建seatingplan類的變量時自動初始化seats和prices
 
@@ -32,7 +33,7 @@ public:
     bool valid(std::string in);
     void autobook();
     void confirm(std::vector<std::vector<char>> &from,std::vector<std::vector<char>> &to);
-    bool book_adj(char id,int no,std::vector<char> &zone,std::vector<std::vector<char>> &seats);
+    static bool book_adj(char id,int no,std::vector<char> &zone,std::vector<std::vector<char>> &seats,std::vector<std::pair<int,int>> &ret);
 };
 
 #endif //SEATING_PLAN_SP_H
