@@ -152,17 +152,16 @@ bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<st
     std::vector<std::pair<int,int>> tmpseats;
     for(int i = 1;i < 16;i++){
         if(zone[i]==id && succ==0){//找到对应区域
-            //std::cout<<zone[i]<<" "<<seats[i][0]<<std::endl;
             tmpseats.clear();
-            for(int j = 0;j < 16;j++){//todo 目前不能连续订16个座位
-                //std::cout<<i<<" "<<j<<std::endl;
+            for(int j = 0;j < 16;j++){
                 if(tmpseats.size()<no && seats[i][j]==id){//寻找连续且可用的座位
                     tmpseats.emplace_back(i,j);
-                }else if(tmpseats.size() == no){
-                    succ = 1;
-                    break;
                 }else{
                     tmpseats.clear();
+                }
+                if(tmpseats.size() == no){
+                    succ = 1;
+                    break;
                 }
             }
         }
