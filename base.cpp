@@ -36,7 +36,7 @@ void seatingplan::menu(){
 void seatingplan::setdefault(){//重置為默認座位表
     prices.clear();
     seats.clear();
-    zone = {'-','A','A','A','B','B','B','C','C','C'};
+    zone = {'-','A','A','A','A','A','B','B','B','B','B','C','C','C','C','C',};
 
     prices['A'] = 100;
     prices['B'] = 200;

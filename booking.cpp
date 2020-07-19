@@ -37,7 +37,7 @@ void seatingplan::manualbook(){//手動訂座
         std::string seat;
         std::cin>>seat;
         while(!valid(seat)){//檢測位置是否有效
-            std::cout<<"Invalid input, please try again.\n";
+            std::cout<<"Invalid input, please try again."<<std::endl;
             std::cin>>seat;
         }
 
@@ -111,7 +111,10 @@ void seatingplan::autobook(){//由電腦根據每個區域所需的門票數量�
     }else{
         for(auto i : bookrec){
             std::vector<std::pair<int,int>> tmpseats;
-            book_adj(i.first,i.second,zone,order,tmpseats);
+            if(!book_adj(i.first,i.second,zone,order,tmpseats)){
+                bookrec.erase(i.first);
+                break;
+            }
             for(auto j : tmpseats)
                 bookedseats[i.first].push_back(j);
         }
@@ -147,8 +150,9 @@ void seatingplan::confirm(std::vector<std::vector<char>> &from,std::vector<std::
 bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<std::vector<char>> &seats,std::vector<std::pair<int,int>> &ret){//逐个逐个区域地自动订座
     bool succ = 0;
     std::vector<std::pair<int,int>> tmpseats;
-    for(int i = 0;i < 16;i++){
+    for(int i = 1;i < 16;i++){
         if(zone[i]==id && succ==0){//找到对应区域
+            //std::cout<<zone[i]<<" "<<seats[i][0]<<std::endl;
             tmpseats.clear();
             for(int j = 0;j < 16;j++){//todo 目前不能连续订16个座位
                 //std::cout<<i<<" "<<j<<std::endl;
@@ -163,11 +167,11 @@ bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<st
             }
         }
     }
-
+    //std::cout<<"booked "<<tmpseats.size()<<std::endl;
     if(succ){//只有在有足够的连续空位下才会将订座纪录记录
         for(auto i : tmpseats){
             seats[i.first][i.second] = 'x';
-            std::cout<<i.first<<" "<<i.second<<std::endl;
+            std::cout<<i.first<<" "<<((char)(i.second+65))<<std::endl;
         }
         ret = tmpseats;
     }
