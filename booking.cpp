@@ -120,12 +120,12 @@ void seatingplan::autobook(){//由電腦根據每個區域所需的門票數量�
         }
     }
 
-    for(auto i : bookedseats){//show booked seats
+    /*for(auto i : bookedseats){//show booked seats
         std::cout<<"Tickets for zone "<<i.first<<" :";
         for(auto j : i.second)
             std::cout<<" "<<j.first<<j.second;
-        std::cout<<"\n";
-    }
+        std::cout<<std::endl;
+    }*/
 
     show(order);
 
@@ -169,10 +169,13 @@ bool seatingplan::book_adj(char id,int no,std::vector<char> &zone,std::vector<st
     }
     //std::cout<<"booked "<<tmpseats.size()<<std::endl;
     if(succ){//只有在有足够的连续空位下才会将订座纪录记录
+        std::cout<<"Tickets for zone "<<id<<" ";//std::endl
         for(auto i : tmpseats){
             seats[i.first][i.second] = 'x';
-            std::cout<<i.first<<" "<<((char)(i.second+65))<<std::endl;
+            char a = i.second + 'A';
+            std::cout<<i.first<<a<<" ";
         }
+        std::cout<<std::endl;
         ret = tmpseats;
     }
 
